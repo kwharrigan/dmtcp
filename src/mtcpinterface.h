@@ -36,7 +36,6 @@ namespace dmtcp
   void callbackHoldsAnyLocks(int *retval);
 
   //these next two are defined in dmtcpplugin.cpp
-  void userHookTrampoline_preCkpt();
-  void userHookTrampoline_postCkpt(bool isRestart);
+  void increment_counters(bool isRestart);
 }
 #endif

@@ -500,3 +500,15 @@ EXTERNC int dmtcp_no_coordinator(void)
 {
   return CoordinatorAPI::noCoordinator();
 }
+
+void dmtcp::increment_counters(bool isRestart)
+{
+  if (isRestart)
+  {
+    numRestarts++;
+  }
+  else
+  {
+    numCheckpoints++;
+  }
+}

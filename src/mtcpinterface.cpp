@@ -100,6 +100,8 @@ void dmtcp::callbackPostCheckpoint(int isRestart,
 
   WorkerState::setCurrentState( WorkerState::RUNNING );
 
+  increment_counters(isRestart);
+
   if (dmtcp_is_ptracing == NULL || !dmtcp_is_ptracing()) {
     // Inform coordinator of our RUNNING state;
     // If running under ptrace, let's do this in sleep-between-ckpt callback.
