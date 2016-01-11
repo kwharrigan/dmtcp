@@ -47,8 +47,18 @@ void dmtcp_event_hook(DmtcpEvent_t event, DmtcpEventData_t *data)
   /* NOTE:  See warning in plugin/README about calls to printf here. */
   switch (event) {
   case DMTCP_EVENT_RESTART:
-  { int size = 4096;
-    char *buf = read_dmtcp_env_file("dmtcp_env.txt", size);
+  { 
+    int size = 4096;
+    int retval;
+    char env[255];
+
+    retval = dmtcp_get_restart_env("DMTCP_ENV_FILE", env, 255);
+    if (retval != 0)
+    {
+        strcpy(env, "dmtcp_env.txt"); 
+    }
+    char *buf = read_dmtcp_env_file(env, size);
+
     readAndSetEnv(buf, size);
     break;
   }
