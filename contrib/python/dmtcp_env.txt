@@ -1,0 +1,2 @@
+MYVAR=myvalue
+INCREMENT=2

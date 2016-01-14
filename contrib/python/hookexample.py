@@ -1,4 +1,5 @@
 import dmtcp
+import os
 
 def my_ckpt():
     print "About to checkpoint."
@@ -19,3 +20,6 @@ print "Calling my_ckpt()"
 my_ckpt()
 x = 12
 print x
+if dmtcp.isRestart():
+    print 'MYVAR=%s' % os.getenv('MYVAR')
+#dmtcp.checkpoint()

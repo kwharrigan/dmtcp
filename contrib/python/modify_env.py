@@ -41,4 +41,8 @@ else:
     print 'First time...MYVAR should be empty'
 print 'MYVAR=[%s] (from libc.so getenv)' % getenv('MYVAR')
 print 'MYVAR=[%s] (from os.getenv)' % os.getenv('MYVAR')
+print 'DMTCP_ENV_FILE=[%s] (from libc.so getenv)' % getenv('DMTCP_ENV_FILE')
 
+if dmtcp.isRestart():
+    raw_input()
+    
