@@ -40,6 +40,8 @@ using namespace dmtcp;
 
 int rounding_mode = 1;
 
+extern void pathvirtInitialize() __attribute ((weak));
+
 static char *_mtcpRestoreArgvStartAddr = NULL;
 #ifdef RESTORE_ARGV_AFTER_RESTART
 static void restoreArgvAfterRestart(char* mtcpRestoreArgvStartAddr);
@@ -88,6 +90,9 @@ void dmtcp::callbackPostCheckpoint(int isRestart,
     WorkerState::setCurrentState(WorkerState::RESTARTING);
     if (dmtcp_update_ppid) {
       dmtcp_update_ppid();
+    }
+    if (pathvirtInitialize) {
+      pathvirtInitialize();
     }
     DmtcpWorker::eventHook(DMTCP_EVENT_RESTART, NULL);
   } else {
