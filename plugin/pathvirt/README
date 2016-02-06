@@ -18,16 +18,16 @@ restart. For example:
         dmtcp_launch -i4 --with-plugin $DMTCP_ROOT/lib/dmtcp/libdmtcp_pathvirt.so \
         ./my-program
 
-Then, on any DMTCP restart, you can optionally set DMTCP_NEW_PATH_PREFIX to a
-second colon delimited list of path prefixes. For example:
+Then, on any DMTCP restart, one can optionally set DMTCP_NEW_PATH_PREFIX to a
+second colon-delimited list of path prefixes. For example:
 
     $ DMTCP_NEW_PATH_PREFIX=/home/user2/bin2:/home/user2/lib2:/home/user2/doc2 \
         ./dmtcp_restart_script.sh
 
-If you *do not* provide DMTCP_NEW_PATH_PREFIX on restart, pathvirt does nothing,
+If one *does not* provide DMTCP_NEW_PATH_PREFIX on restart, pathvirt does nothing,
 and the program is restarted from the last checkpoint as normal.
 
-If you *do* provide it, pathvirt becomes active and starts performing path
+If one *does* provide it, pathvirt becomes active and starts performing path
 translation.  At this point, prefixes in this second list will dynamically
 replace corresponding prefixes in the first list when a program uses a path
 that is prefixed with an entry in the first colon list in a call to libc. For
@@ -63,6 +63,18 @@ example:
     (The DMTCP_NEW_PATH_PREFIX can be set prior to restart to guarantee that
     the path lists are of the same length.)
 
+5.  If there is more than one match of a pathname with a path prefix
+    in DMTCP_ORIGINAL_PATH_PREFIX, then the first match is used.  This is
+    useful for creating exceptions to a path translation.
+
+    As an example, suppose user2 wants to restart by using a checkpoint
+    image created by user1.  User2 wants to start in the directory of
+    user2, since he or she has no permission to write in the directory
+    of user1.  But user2 should continue to use the original configuration
+    file, /home/user1/config.txt .  The following solution will work:
+    > DMTCP_ORIGINAL_PATH_PREFIX=/home/user1/config.txt:/home/user1
+    > DMTCP_NEW_PATH_PREFIX=/home/user1/config.txt:/home/user2
+
 ## Constraints
 
 - The maximum size permitted for the DMTCP_*_PATH_PREFIX environment variables
@@ -77,9 +89,7 @@ example:
 - Strict POSIX compliance in regards to certain error handling (in particular,
   EFAULT on invalid address) is not fully supported.
 
-## Development
-
-### Testing
+## Testing
 
 To run a basic test, cd into plugin/pathvirt/test/slot5.
 
