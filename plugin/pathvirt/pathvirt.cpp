@@ -114,11 +114,17 @@ clfind(const char *colonList,  // IN
 /*
  * clget - returns pointer to element in colonList at index i
  *         and NULL if not found
+ *
+ * NOTE: argument `int i` is declared signed (versus unsigned) because we
+ * commonly expect this argument to be the return value of a `clfind` call. If
+ * the `clfind` caller did not check the return value and passes in a negative
+ * int, this will harmless fail in a "clean" manner, typewise, rather than
+ * "harmlessly" failing due to an underlying signed->unsigned type cast.
  */
 static char*
-clget(const char *colonList, unsigned i)
+clget(const char *colonList, int i)
 {
-    unsigned curr_ind = 0;
+    int curr_ind = 0;
     char *element = const_cast<char *>(colonList);
     char *colon = NULL;
 
