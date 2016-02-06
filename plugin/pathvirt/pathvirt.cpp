@@ -350,6 +350,21 @@ dmtcp_event_hook(DmtcpEvent_t event, DmtcpEventData_t *data)
     DMTCP_NEXT_EVENT_HOOK(event, data);
 }
 
+/*
+ * Pathvirt Libc Wrappers
+ *
+ * FIXME: There are currently several known limitations of these wrappers.
+ *
+ * 1. Virtualization is not supported for select path prefixes, such as
+ *    `/proc` due to libc wrappers that occur earlier than pathvirt in the
+ *    LD_PRELOAD sequence. (example: `/proc/self/exe`, in file plugin
+ *    `readlink` wrapper)
+ *
+ * 2. In many cases, these wrappers should ideally make a test "real" syscall
+ *    in order to properly fail if given bad addresses, etc. Currently, this
+ *    is only implemented for the `xstat` family of wrappers.
+ */
+
 static int _open_open64_work(int(*fn) (const char *path, int flags, ...),
                              const char *path, int flags, mode_t mode)
 {
