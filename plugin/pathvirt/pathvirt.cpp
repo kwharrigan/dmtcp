@@ -331,17 +331,6 @@ dmtcp_event_hook(DmtcpEvent_t event, DmtcpEventData_t *data)
         pthread_rwlock_init(&listRwLock, NULL);
         break;
     }
-    case DMTCP_EVENT_RESTART:
-    {
-        JTRACE("\n*** The plugin %s is being called after restart. ***");
-        break;
-    }
-    case DMTCP_EVENT_WRITE_CKPT:
-        JTRACE("\n*** The plugin %s is being called before checkpointing. ***");
-        break;
-    case DMTCP_EVENT_RESUME:
-        JTRACE("*** The plugin %s has now been checkpointed. ***");
-        break;
     default:
     ;
     }
