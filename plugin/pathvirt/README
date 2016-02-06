@@ -7,7 +7,7 @@ redirected elsewhere on the file system on DMTCP restart.
 ## Usage
 
 pathvirt operates on the basis of path prefixes and is interfaced with using
-the DMTCP_PATH_PREFIX environment variable.
+the DMTCP_ORIGINAL_PATH_PREFIX/DMTCP_NEW_PATH_PREFIX environment variable.
 
 On DMTCP init, set DMTCP_ORIGINAL_PATH_PREFIX to a colon delimited list of path
 prefixes to register them with pathvirt. This is required, but does not
@@ -21,7 +21,7 @@ restart. For example:
 Then, on any DMTCP restart, you can optionally set DMTCP_NEW_PATH_PREFIX to a
 second colon delimited list of path prefixes. For example:
 
-    $ DMTCP_PATH_PREFIX=/home/user2/bin2:/home/user2/lib2:/home/user2/doc2 \
+    $ DMTCP_NEW_PATH_PREFIX=/home/user2/bin2:/home/user2/lib2:/home/user2/doc2 \
         ./dmtcp_restart_script.sh
 
 If you *do not* provide DMTCP_NEW_PATH_PREFIX on restart, pathvirt does nothing,
@@ -65,12 +65,17 @@ example:
 
 ## Constraints
 
-- The maximum size permitted for the DMTCP_PATH_PREFIX environment variable is
-  10*1024 bytes at time of writing. This configuration can be increased by
+- The maximum size permitted for the DMTCP_*_PATH_PREFIX environment variables
+  is 10*1024 bytes at time of writing. This configuration can be increased by
   editing `plugin/pathvirt/pathvirt.cpp:MAX_ENV_VAR_SIZE` and recompiling.
-- DMTCP_PATH_PREFIX is also constrained by a DMTCP environment variable
-  limit of 12*1024 bytes at time of writing. This configuration can be
-  increased by editing `src/dmtcpplugin.cpp:MAXSIZE` and recompiling.
+- The DMTCP_*_PATH_PREFIX environment variables are also constrained by a DMTCP
+  environment variable limit of 12*1024 bytes at time of writing. This
+  configuration can be increased by editing `src/dmtcpplugin.cpp:MAXSIZE` and
+  recompiling.
+- Virtualization of certain path prefixes such as `/proc` or `/dev` is
+  experimental and unsupported.
+- Strict POSIX compliance in regards to certain error handling (in particular,
+  EFAULT on invalid address) is not fully supported.
 
 ## Development
 
