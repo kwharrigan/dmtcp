@@ -1,0 +1,72 @@
+        Live migration documentation
+
+Rohan Garg (rohgarg@ccs.neu.edu)
+Kyle Harrigan (kwharrigan@gatech.edu)
+
+This is intended as one of a series of informal documents to describe
+and partially document some of the more subtle DMTCP data structures
+and algorithms.  These documents are snapshots in time, and they
+may become somewhat out-of-date over time (and hopefully also refreshed
+to re-sync them with the code again).
+
+This document describes emerging live migration functionality.  From Rohan's
+initial description:
+
+```
+FYI: I developed a simple prototype a few months ago that allows you to
+migrate a single process from one system to another over a TCP socket.
+The process gets migrated to the second machine at checkpoint time. The
+basic idea is to write the checkpoint data to the network instead
+of a file on the disk.  Note that this doesn't do live migration
+and only supports single process applications. 
+```
+
+The following gives example usage for running a trivial migration from one
+machine to another.  
+
+```
+Example usage:
+
+  # Start a "dummy" restart process on machine 1 (IP address: a.b.c.d):
+  $ LM_DEST_PORT=5555 dmtcp_restart
+
+  # On machine 2:
+  $ LM_DEST_IP=a.b.c.d LM_DEST_PORT=5555 dmtcp_launch --exit-after-ckpt a.out
+```
+
+Notes on strategy
+==================
+
+Here are three stratagies discussed for implementing live migration:
+
+- Stop everything-and-migrate.  Similar to the implementation above
+
+- Post-copy migration: This is a pure on-demand remote paging
+  strategy using "userfaultfd", where the process on the destination
+  node is started immediately and it then requests for pages from the
+  source node on-demand.
+
+- Pre-copy migration: This strategy iteratively sends dirty pages
+  (tracked using pagemap) from the source node to the destination
+  node. After a few iterations, when the difference converges to below
+  a pre-defined limit, the process on the source node is stopped,
+  the dirty pages are sent for one final time, and the context
+  is transferred to the destination process.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
